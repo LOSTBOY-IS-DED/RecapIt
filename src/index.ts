@@ -29,18 +29,17 @@
 
 // main();
 
-import { Builder, Browser, By, Key, until } from "selenium-webdriver";
+import {
+  Builder,
+  Browser,
+  By,
+  Key,
+  until,
+  WebDriver,
+} from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome";
 
-async function OpenMeet() {
-  const options = new Options({});
-  options.addArguments("--disable-blink-features=AutomationControlled");
-  options.addArguments("--use-fake-ui-for-media-stream");
-  let driver = await new Builder()
-    .forBrowser(Browser.CHROME)
-    .setChromeOptions(options)
-    .build();
-
+async function OpenMeet(driver: WebDriver) {
   try {
     await driver.get("https://meet.google.com/gyc-sdmn-gfn");
     const popupButton = await driver.wait(
@@ -67,9 +66,24 @@ async function OpenMeet() {
   }
 }
 
+async function getDriver() {
+  const options = new Options({});
+  options.addArguments("--disable-blink-features=AutomationControlled");
+  options.addArguments("--use-fake-ui-for-media-stream");
+  let driver = await new Builder()
+    .forBrowser(Browser.CHROME)
+    .setChromeOptions(options)
+    .build();
+  return driver;
+}
+
+async function screenShare() {}
+
 async function Main() {
-  await OpenMeet();
+  const driver = await getDriver();
+  await OpenMeet(driver);
   // wait for the meeting link to join
+  await screenShare(driver);
 }
 
 Main();
